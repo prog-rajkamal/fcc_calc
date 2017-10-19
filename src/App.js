@@ -123,15 +123,17 @@ class App extends Component {
     render() {
         return (
             <div className="App section">
-                <h1 className="title is-1"> Free code camp - Calculator </h1>
-                <div className="container">{this.renderCalculator()}</div>
+                <div className="container" >
+                    <h1 className="title is-1 App__heading" > Free code camp - Calculator </h1>
+                    {this.renderCalculator()}
+                </div>
             </div>
         );
     }
 
     renderCalculator() {
         return (
-            <div className="calculator">
+            <div className="calculator" >
                 <div className="calculator__output">
                     <div className="calc__result">{this.state.calc_result}</div>
                     <div className="calc__expression">
@@ -208,6 +210,7 @@ class App extends Component {
             ops = ops.replace(/÷/g, "/");
             ops = ops.replace(/×/g, "*");
             ops = ops.replace(/MOD/g, "%");
+            // eslint-disable-next-line
             res = eval(ops);
         } catch (error) {
             res = "Error!";
