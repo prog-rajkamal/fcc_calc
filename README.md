@@ -2,4 +2,11 @@
 
 A simple Calculator built to complete FCC Challenge.
 
-# LICENCE ISC
+This app is scaffolded by create-react-app
+
+# LICENCE
+
+ISC
+
+
+
