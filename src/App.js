@@ -8,111 +8,111 @@ class App extends Component {
         this.buttonTypes = {
             Command: "Command",
             Input: "Input",
-            Operator: "Operator"
+            Operator: "Operator",
         };
         this.calculatorStatus = {
-            BLANK:'BLANK',
-            ERROR:'ERROR',
-            NUMERIC:'NUMERIC',
-            OPERATOR:'OPERATOR'
+            BLANK: "BLANK",
+            ERROR: "ERROR",
+            NUMERIC: "NUMERIC",
+            OPERATOR: "OPERATOR",
         };
 
         this.buttons = [
             {
                 display: "AC",
                 type: this.buttonTypes.Command,
-                order: 1
+                order: 1,
             },
             {
                 display: "C",
                 type: this.buttonTypes.Command,
-                order: 30
+                order: 30,
             },
             {
                 display: " ÷ ",
                 type: this.buttonTypes.Operator,
-                order: 70
+                order: 70,
             },
             {
                 display: " × ",
                 type: this.buttonTypes.Operator,
-                order: 85
+                order: 85,
             },
             {
                 display: " - ",
                 type: this.buttonTypes.Operator,
-                order: 90
+                order: 90,
             },
             {
                 display: " + ",
                 type: this.buttonTypes.Operator,
-                order: 95
+                order: 95,
             },
             {
                 display: "=",
                 type: this.buttonTypes.Operator,
-                order: 100
+                order: 100,
             },
             {
                 display: " MOD ",
                 type: this.buttonTypes.Operator,
-                order: 10
+                order: 10,
             },
             {
                 display: ".",
                 type: this.buttonTypes.Input,
-                order: 75
+                order: 75,
             },
             {
                 display: "9",
                 type: this.buttonTypes.Input,
-                order: 71
+                order: 71,
             },
             {
                 display: "8",
                 type: this.buttonTypes.Input,
-                order: 32
+                order: 32,
             },
             {
                 display: "7",
                 type: this.buttonTypes.Input,
-                order: 5
+                order: 5,
             },
             {
                 display: "6",
                 type: this.buttonTypes.Input,
-                order: 72
+                order: 72,
             },
             {
                 display: "5",
                 type: this.buttonTypes.Input,
-                order: 33
+                order: 33,
             },
             {
                 display: "4",
                 type: this.buttonTypes.Input,
-                order: 6
+                order: 6,
             },
             {
                 display: "3",
                 type: this.buttonTypes.Input,
-                order: 73
+                order: 73,
             },
             {
                 display: "2",
                 type: this.buttonTypes.Input,
-                order: 34
+                order: 34,
             },
             {
                 display: "1",
                 type: this.buttonTypes.Input,
-                order: 7
+                order: 7,
             },
             {
                 display: "0",
                 type: this.buttonTypes.Input,
-                order: 35
-            }
+                order: 35,
+            },
             //    'AC' , '7', '4', '1' , '%',
             // 'C' , '8', '5', '2' , '0',
             // '÷' , '9', '6', '3' , '.',
@@ -133,7 +133,9 @@ class App extends Component {
             calc_result: "",
             calc_operation: "",
             calc_buffer: "",
-            calc_output: ""
+            calc_output: "",
+            display_primary: "",
+            display_secondary: "",
         };
     }
     render() {
@@ -141,8 +143,7 @@ class App extends Component {
             <div className="App section">
                 <div className="container">
                     <h1 className="title is-1 App__heading">
-                        {" "}
-                        Free code camp - Calculator{" "}
+                        Free code camp - Calculator
                     </h1>
                     {this.renderCalculator()}
                 </div>
@@ -181,7 +182,7 @@ class App extends Component {
             if (btn.display === "AC") {
                 this.setState({
                     calc_operation: "",
-                    calc_result: ""
+                    calc_result: "",
                 });
             } else if (btn.display === "C") {
                 this.setState(state => {
@@ -189,7 +190,7 @@ class App extends Component {
                         calc_operation: state.calc_operation.slice(
                             0,
                             state.calc_operation.length - 1
-                        )
+                        ),
                     };
                 });
             }
@@ -198,7 +199,7 @@ class App extends Component {
         if (btn.type === this.buttonTypes.Input) {
             this.setState(state => {
                 return {
-                    calc_operation: state.calc_operation + btn.display
+                    calc_operation: state.calc_operation + btn.display,
                 };
             });
             return;
@@ -207,14 +208,14 @@ class App extends Component {
         if (btn.type === this.buttonTypes.Operator && btn.display === "=") {
             this.setState(state => {
                 return {
-                    calc_result: this.calculate()
+                    calc_result: this.calculate(),
                 };
             });
             return;
         } else {
             this.setState(state => {
                 return {
-                    calc_operation: state.calc_operation + btn.display
+                    calc_operation: state.calc_operation + btn.display,
                 };
             });
             return;
