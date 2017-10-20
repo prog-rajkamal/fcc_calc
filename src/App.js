@@ -115,9 +115,19 @@ class App extends Component {
         this.buttons = this.buttons.sort(
             (btna, btnb) => btna.order > btnb.order
         );
+
+        // Calculator
+        // state = invalid -> show error, accept numeric inputs
+        // state = blank, -> show blank, accept numeric input (first arg)
+        // state = numeric -> accept all inputs.
+        // state = operator -> accept ops(replace with current), take numeric inp as second arg.
+
         this.state = {
             calc_result: "",
-            calc_operation: ""
+            calc_operation: "",
+            calc_buffer: "",
+            calc_output: "",
+            inp_status: false,
         };
     }
     render() {
