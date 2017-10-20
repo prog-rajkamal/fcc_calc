@@ -17,6 +17,14 @@ class App extends Component {
             OPERATOR: "OPERATOR",
         };
 
+        this.CALCULATOR_OPERATORS = {
+            PLUS: " + ",
+            MINUS: " - ",
+            MULTIPLY: " × ",
+            DIVIDE: " ÷ ",
+            MODULUS: " MOD ",
+        };
+
         this.buttons = [
             {
                 display: "AC",
@@ -128,15 +136,22 @@ class App extends Component {
         // state = numeric -> accept all inputs.
         // state = operator -> accept ops(replace with current), take numeric inp as second arg.
 
-        this.state = {
+        this.BLANK_STATE = {
             status: this.calculatorStatus.BLANK,
-            calc_result: "",
+            input: "",
+            buffer: "",
             calc_operation: "",
-            calc_buffer: "",
             calc_output: "",
             display_primary: "",
             display_secondary: "",
         };
+        this.ERROR_STATE = {
+            status: this.calculatorStatus.ERROR,
+            input: "ERROR!",
+            buffer: "",
+        };
+        this.state = this.BLANK_STATE;
+        this.prevState = this.BLANK_STATE;
     }
     render() {
         return (
@@ -178,37 +193,111 @@ class App extends Component {
     buttonPressed(e, btn) {
         e.preventDefault();
 
-        if (btn.type === this.buttonTypes.Command) {
-            if (btn.display === "AC") {
-                this.setState({
-                    calc_operation: "",
-                    calc_result: "",
-                });
-            } else if (btn.display === "C") {
-                this.setState(state => {
-                    return {
-                        calc_operation: state.calc_operation.slice(
-                            0,
-                            state.calc_operation.length - 1
-                        ),
-                    };
-                });
-            }
+        // If ALL Clear is pressed, state is set to blank.
+        if (btn.display === "AC") {
+            this.state = this.BLANK_STATE;
             return;
         }
-        if (btn.type === this.buttonTypes.Input) {
+
+        let self = this;
+        // If CLEAR is pressed, remove last character from calc inp.
+        if (btn.display === "C") {
             this.setState(state => {
-                return {
-                    calc_operation: state.calc_operation + btn.display,
-                };
+                if (state.status === self.calculatorStatus.BLANK)
+                    return self.BLANK_STATE;
+
+                if (state.status === self.calculatorStatus.ERROR) {
+                    return self.BLANK_STATE;
+                }
+
+                if (state.status === self.calculatorStatus.NUMERIC) {
+                    //TODO: handle prev state nicely
+                    if (state.input.length > 1)
+                        return {
+                            input: state.input.slice(
+                                0,
+                                state.calc_operation.length - 1
+                            ),
+                        };
+                }
+
+                if (state.status === self.calculatorStatus.OPERATOR) {
+                    return this.prevState;
+                }
             });
             return;
         }
 
+        if (btn.type === this.buttonTypes.Input) {
+            this.setState(state => {
+                if (
+                    state.status === self.calculatorStatus.BLANK ||
+                    state.status === self.calculatorStatus.ERROR
+                ) {
+                    self.prevState = self.BLANK_STATE;
+                    return {
+                        input: btn.display,
+                        status: self.calculatorStatus.NUMERIC,
+                    };
+                }
+
+                if (state.status === self.calculatorStatus.NUMERIC) {
+                    self.prevState = state;
+                    return {
+                        input: state.input + btn.display,
+                    };
+                }
+
+                if (state.status === self.calculatorStatus.OPERATOR) {
+                    self.prevState = state;
+                    return {
+                        input: btn.display,
+                        buffer: state.buffer + state.input,
+                        status: self.calculatorStatus.NUMERIC,
+                    };
+                }
+            });
+            return;
+        }
+
+        if (btn.type === this.buttonTypes.Operator) {
+            this.setState(state => {
+                if (
+                    state.status === self.calculatorStatus.BLANK ||
+                    state.status === self.calculatorStatus.ERROR
+                ) {
+                    if (btn.display === "+" || btn.display === "-")
+                        return {
+                            input: btn.display,
+                            status: self.calculatorStatus.NUMERIC,
+                        };
+                }
+
+                if (state.status === self.calculatorStatus.NUMERIC) {
+                    return {
+                        input: btn.display,
+                        buffer: state.buffer + state.input,
+                        status: self.calculatorStatus.OPERATOR,
+                    };
+                }
+
+                if (state.status === self.calculatorStatus.OPERATOR) {
+                    if (btn.display === " + " || btn.display === " - ")
+                        return {
+                            input: btn.display,
+                            buffer: state.buffer + state.input,
+                            status: state.NUMERIC,
+                        };
+                    if (btn.display !== "=") {
+                    }
+                }
+            });
+            return;
+        }
         if (btn.type === this.buttonTypes.Operator && btn.display === "=") {
             this.setState(state => {
                 return {
-                    calc_result: this.calculate(),
+                    calc_result: this.calculate(state.calc_operation),
                 };
             });
             return;
@@ -222,9 +311,8 @@ class App extends Component {
         }
     }
 
-    calculate() {
+    calculate(ops) {
         let res = 0;
-        let ops = this.state.calc_operation;
         try {
             // debugger;
             ops = ops.replace(/÷/g, "/");
