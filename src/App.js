@@ -5,6 +5,7 @@ class App extends Component {
     constructor() {
         super();
         this.buttonPressed.bind(this);
+        this.calculate.bind(this);
         this.buttonTypes = {
             Command: "Command",
             Input: "Input",
@@ -23,6 +24,7 @@ class App extends Component {
             MULTIPLY: " × ",
             DIVIDE: " ÷ ",
             MODULUS: " MOD ",
+            EQUALS: " = ",
         };
 
         this.buttons = [
@@ -57,7 +59,7 @@ class App extends Component {
                 order: 95,
             },
             {
-                display: "=",
+                display: this.CALCULATOR_OPERATORS.EQUALS,
                 type: this.buttonTypes.Operator,
                 order: 100,
             },
@@ -170,10 +172,8 @@ class App extends Component {
         return (
             <div className="calculator">
                 <div className="calculator__output">
-                    <div className="calc__result">{this.state.calc_result}</div>
-                    <div className="calc__expression">
-                        {this.state.calc_operation}
-                    </div>
+                    <div className="calc__result">{this.state.input}</div>
+                    <div className="calc__expression">{this.state.buffer}</div>
                 </div>
                 <div className="calculator__input">
                     {this.buttons.map(btn => (
@@ -262,6 +262,35 @@ class App extends Component {
 
         if (btn.type === this.buttonTypes.Operator) {
             this.setState(state => {
+                if (btn.display === self.CALCULATOR_OPERATORS.EQUALS) {
+                    if (
+                        state.status === self.calculatorStatus.ERROR ||
+                        state.status === self.calculatorStatus.ERROR
+                    ) {
+                        return self.calculatorStatus.BLANK;
+                    }
+
+                    if (
+                        state.status === self.calculatorStatus.NUMERIC &&
+                        state.buffer !== ""
+                    ) {
+                        // Time for action
+                        this.prevState = state;
+                        try {
+                            var res = self.calculate(
+                                state.buffer + state.input
+                            );
+                        } catch (error) {
+                            return self.ERROR_STATE;
+                        }
+                        return {
+                            input: res,
+                            buffer: state.buffer + state.input,
+                            status: self.calculatorStatus.NUMERIC,
+                        };
+                    }
+                    return self.BLANK_STATE;
+                }
                 if (
                     state.status === self.calculatorStatus.BLANK ||
                     state.status === self.calculatorStatus.ERROR
@@ -282,43 +311,54 @@ class App extends Component {
                 }
 
                 if (state.status === self.calculatorStatus.OPERATOR) {
-                    if (btn.display === " + " || btn.display === " - ")
+                    if (
+                        btn.display === self.CALCULATOR_OPERATORS.PLUS ||
+                        btn.display === self.CALCULATOR_OPERATORS.MINUS
+                    )
                         return {
                             input: btn.display,
                             buffer: state.buffer + state.input,
                             status: state.NUMERIC,
                         };
-                    if (btn.display !== "=") {
+                    if (btn.display !== self.CALCULATOR_OPERATORS.EQUALS) {
+                        return {
+                            input: btn.display,
+                        };
+                    } else {
+                        return state;
                     }
                 }
             });
             return;
         }
-        if (btn.type === this.buttonTypes.Operator && btn.display === "=") {
-            this.setState(state => {
-                return {
-                    calc_result: this.calculate(state.calc_operation),
-                };
-            });
-            return;
-        } else {
-            this.setState(state => {
-                return {
-                    calc_operation: state.calc_operation + btn.display,
-                };
-            });
-            return;
-        }
+        // if (btn.type === this.buttonTypes.Operator && btn.display === "=") {
+        //     this.setState(state => {
+        //         return {
+        //             calc_result: this.calculate(state.calc_operation),
+        //         };
+        //     });
+        //     return;
+        // } else {
+        //     this.setState(state => {
+        //         return {
+        //             calc_operation: state.calc_operation + btn.display,
+        //         };
+        //     });
+        //     return;
+        // }
     }
 
     calculate(ops) {
         let res = 0;
+        console.log("RAW: " + ops);
+
         try {
             // debugger;
             ops = ops.replace(/÷/g, "/");
             ops = ops.replace(/×/g, "*");
             ops = ops.replace(/MOD/g, "%");
             // eslint-disable-next-line
+            console.log("Cooked:" + ops);
             res = eval(ops);
         } catch (error) {
             res = "Error!";
