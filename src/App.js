@@ -10,6 +10,12 @@ class App extends Component {
             Input: "Input",
             Operator: "Operator"
         };
+        this.calculatorStatus = {
+            BLANK:'BLANK',
+            ERROR:'ERROR',
+            NUMERIC:'NUMERIC',
+            OPERATOR:'OPERATOR'
+        };
 
         this.buttons = [
             {
@@ -123,18 +129,21 @@ class App extends Component {
         // state = operator -> accept ops(replace with current), take numeric inp as second arg.
 
         this.state = {
+            status: this.calculatorStatus.BLANK,
             calc_result: "",
             calc_operation: "",
             calc_buffer: "",
-            calc_output: "",
-            inp_status: false,
+            calc_output: ""
         };
     }
     render() {
         return (
             <div className="App section">
-                <div className="container" >
-                    <h1 className="title is-1 App__heading" > Free code camp - Calculator </h1>
+                <div className="container">
+                    <h1 className="title is-1 App__heading">
+                        {" "}
+                        Free code camp - Calculator{" "}
+                    </h1>
                     {this.renderCalculator()}
                 </div>
             </div>
@@ -143,7 +152,7 @@ class App extends Component {
 
     renderCalculator() {
         return (
-            <div className="calculator" >
+            <div className="calculator">
                 <div className="calculator__output">
                     <div className="calc__result">{this.state.calc_result}</div>
                     <div className="calc__expression">
@@ -166,8 +175,8 @@ class App extends Component {
     }
 
     buttonPressed(e, btn) {
-        // console.log(btn);
         e.preventDefault();
+
         if (btn.type === this.buttonTypes.Command) {
             if (btn.display === "AC") {
                 this.setState({
