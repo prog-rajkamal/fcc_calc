@@ -37,22 +37,22 @@ class App extends Component {
                 order: 30,
             },
             {
-                display: " ÷ ",
+                display: this.CALCULATOR_OPERATORS.DIVIDE,
                 type: this.buttonTypes.Operator,
                 order: 70,
             },
             {
-                display: " × ",
+                display: this.CALCULATOR_OPERATORS.MULTIPLY,
                 type: this.buttonTypes.Operator,
                 order: 85,
             },
             {
-                display: " - ",
+                display: this.CALCULATOR_OPERATORS.MINUS,
                 type: this.buttonTypes.Operator,
                 order: 90,
             },
             {
-                display: " + ",
+                display: this.CALCULATOR_OPERATORS.PLUS,
                 type: this.buttonTypes.Operator,
                 order: 95,
             },
