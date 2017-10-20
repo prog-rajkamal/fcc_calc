@@ -195,7 +195,7 @@ class App extends Component {
 
         // If ALL Clear is pressed, state is set to blank.
         if (btn.display === "AC") {
-            this.state = this.BLANK_STATE;
+            this.setState(this.BLANK_STATE);
             return;
         }
 
@@ -331,34 +331,16 @@ class App extends Component {
             });
             return;
         }
-        // if (btn.type === this.buttonTypes.Operator && btn.display === "=") {
-        //     this.setState(state => {
-        //         return {
-        //             calc_result: this.calculate(state.calc_operation),
-        //         };
-        //     });
-        //     return;
-        // } else {
-        //     this.setState(state => {
-        //         return {
-        //             calc_operation: state.calc_operation + btn.display,
-        //         };
-        //     });
-        //     return;
-        // }
     }
 
     calculate(ops) {
         let res = 0;
-        console.log("RAW: " + ops);
-
         try {
             // debugger;
             ops = ops.replace(/÷/g, "/");
             ops = ops.replace(/×/g, "*");
             ops = ops.replace(/MOD/g, "%");
             // eslint-disable-next-line
-            console.log("Cooked:" + ops);
             res = eval(ops);
         } catch (error) {
             res = "Error!";
