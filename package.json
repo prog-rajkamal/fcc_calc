@@ -1,17 +1,18 @@
 {
-  "name": "fcc_calculator",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "bulma": "^0.6.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "name": "fcc_calculator",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "bulma": "^0.6.0",
+        "react": "^16.0.0",
+        "react-dom": "^16.0.0",
+        "react-scripts": "1.0.14"
+    },
+    "homepage": "https://riment.000webhostapp.com/fcc/calculator/",
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    }
 }

@@ -2,7 +2,9 @@
 
 A simple Calculator built to complete FCC Challenge.
 
-This app is scaffolded by create-react-app
+This app is currently hosted at https://riment.000webhostapp.com/fcc/calculator/
+
+This app was scaffolded by create-react-app
 
 
 # Issues
