@@ -34,10 +34,12 @@ class App extends Component {
                 display: this.CALCULATOR_OPERATORS.ALL_CLEAR,
                 type: this.buttonTypes.Command,
                 order: 1,
+                class: "calc__button__all_clear",
             },
             {
                 display: this.CALCULATOR_OPERATORS.CLEAR,
                 type: this.buttonTypes.Command,
+                class: "calc__button__clear",
                 order: 30,
             },
             {
