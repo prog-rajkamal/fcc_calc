@@ -318,13 +318,6 @@ class App extends Component {
                         buffer: state.buffer + state.input,
                         status: state.NUMERIC,
                     };
-                    if (btn.display !== self.CALCULATOR_OPERATORS.EQUALS) {
-                        return {
-                            input: btn.display,
-                        };
-                    } else {
-                        return state;
-                    }
                 }
             });
             return;
