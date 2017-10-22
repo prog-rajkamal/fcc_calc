@@ -2,9 +2,9 @@
     box-sizing: border-box;
 }
 
-.calculator{
-    min-width:32rem;
-    max-width:25rem;
+.calculator {
+    min-width: 32rem;
+    max-width: 25rem;
     margin: 0 auto;
 }
 .calculator__input {
@@ -38,9 +38,9 @@
     height: 1.5em;
 
     /* border: 0.2rem inset hsl(0, 0%, 30%); */
-  }
+}
 
-  .calc__expression {
+.calc__expression {
     border-top: 0.2rem dotted grey;
     font-size: 1.5rem;
     line-height: 2.4rem;
@@ -49,16 +49,20 @@
     text-align: right;
     overflow: hidden;
     /* border: 0.2rem inset hsl(0, 0%, 30%); */
-  }
+}
 
 .calc__button {
     max-width: 3em;
     font-size: 1.5rem;
     height: 3em;
-    margin-top: 1.0rem;
+    margin-top: 1rem;
     margin-left: auto;
     margin-right: auto;
-    min-width: 4.0em;
+    min-width: 4em;
+}
+
+.calc__button__equals {
+    height: 9.5rem;
 }
 
 .App__heading {

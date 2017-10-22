@@ -64,6 +64,7 @@ class App extends Component {
                 display: this.CALCULATOR_OPERATORS.EQUALS,
                 type: this.buttonTypes.Operator,
                 order: 100,
+                class: "calc__button__equals",
             },
             {
                 display: " MOD ",
@@ -178,7 +179,7 @@ class App extends Component {
                 <div className="calculator__input">
                     {this.buttons.map(btn => (
                         <button
-                            className="calc__button"
+                            className={"calc__button  " + btn.class || ""}
                             key={btn.order}
                             onClick={e => this.buttonPressed(e, btn)}
                         >
