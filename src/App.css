@@ -3,9 +3,11 @@
 }
 
 .calculator {
-    min-width: 32rem;
+    min-width: 35.4rem;
     max-width: 25rem;
     margin: 0 auto;
+    padding: 1.5rem;
+    background: hsla(56, 73%, 60%, 0.8);
 }
 .calculator__input {
     display: flex;
@@ -61,6 +63,7 @@
     margin-left: auto;
     margin-right: auto;
     min-width: 4em;
+    background: hsl(56, 60%, 80%);
 }
 
 .calc__button__equals {
@@ -75,4 +78,8 @@
 
 .App__heading {
     text-align: center;
+}
+
+body {
+    background: hsl(56, 60%, 80%);
 }
