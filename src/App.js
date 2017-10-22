@@ -25,16 +25,18 @@ class App extends Component {
             DIVIDE: " ÷ ",
             MODULUS: " MOD ",
             EQUALS: " = ",
+            ALL_CLEAR: " AC ",
+            CLEAR: " 🡐 ",
         };
 
         this.buttons = [
             {
-                display: "AC",
+                display: this.CALCULATOR_OPERATORS.ALL_CLEAR,
                 type: this.buttonTypes.Command,
                 order: 1,
             },
             {
-                display: "C",
+                display: this.CALCULATOR_OPERATORS.CLEAR,
                 type: this.buttonTypes.Command,
                 order: 30,
             },
@@ -142,8 +144,6 @@ class App extends Component {
             status: this.calculatorStatus.BLANK,
             input: "",
             buffer: "",
-            calc_operation: "",
-            calc_output: "",
             display_primary: "",
             display_secondary: "",
         };
@@ -153,7 +153,7 @@ class App extends Component {
             buffer: "",
         };
         this.state = this.BLANK_STATE;
-        this.prevState = this.BLANK_STATE;
+        this.prevStates = [];
     }
     render() {
         return (
@@ -194,35 +194,27 @@ class App extends Component {
         e.preventDefault();
 
         // If ALL Clear is pressed, state is set to blank.
-        if (btn.display === "AC") {
+        if (btn.display === this.CALCULATOR_OPERATORS.ALL_CLEAR) {
             this.setState(this.BLANK_STATE);
             return;
         }
 
         let self = this;
-        // If CLEAR is pressed, remove last character from calc inp.
-        if (btn.display === "C") {
-            this.setState(state => {
-                if (state.status === self.calculatorStatus.BLANK)
+        // this works as back button
+        if (btn.display === this.CALCULATOR_OPERATORS.CLEAR) {
+            this.setState(prevState => {
+                if (prevState.status === self.calculatorStatus.BLANK)
                     return self.BLANK_STATE;
 
-                if (state.status === self.calculatorStatus.ERROR) {
+                if (prevState.status === self.calculatorStatus.ERROR) {
                     return self.BLANK_STATE;
                 }
 
-                if (state.status === self.calculatorStatus.NUMERIC) {
-                    //TODO: handle prev state nicely
-                    if (state.input.length > 1)
-                        return {
-                            input: state.input.slice(
-                                0,
-                                state.calc_operation.length - 1
-                            ),
-                        };
-                }
-
-                if (state.status === self.calculatorStatus.OPERATOR) {
-                    return this.prevState;
+                //TODO: handle  prevState nicely+
+                if (self.prevStates.length > 0) {
+                    return self.prevStates.pop();
+                } else {
+                    return self.BLANK_STATE;
                 }
             });
             return;
@@ -234,7 +226,7 @@ class App extends Component {
                     state.status === self.calculatorStatus.BLANK ||
                     state.status === self.calculatorStatus.ERROR
                 ) {
-                    self.prevState = self.BLANK_STATE;
+                    self.prevStates = [self.BLANK_STATE];
                     return {
                         input: btn.display,
                         status: self.calculatorStatus.NUMERIC,
@@ -242,14 +234,14 @@ class App extends Component {
                 }
 
                 if (state.status === self.calculatorStatus.NUMERIC) {
-                    self.prevState = state;
+                    self.prevStates.push(state);
                     return {
                         input: state.input + btn.display,
                     };
                 }
 
                 if (state.status === self.calculatorStatus.OPERATOR) {
-                    self.prevState = state;
+                    self.prevStates.push(state);
                     return {
                         input: btn.display,
                         buffer: state.buffer + state.input,
@@ -264,9 +256,11 @@ class App extends Component {
             this.setState(state => {
                 if (btn.display === self.CALCULATOR_OPERATORS.EQUALS) {
                     if (
-                        state.status === self.calculatorStatus.ERROR ||
+                        state.status === self.calculatorStatus.BLANK ||
                         state.status === self.calculatorStatus.ERROR
                     ) {
+                        self.prevStates = [self.BLANK_STATE];
+
                         return self.calculatorStatus.BLANK;
                     }
 
@@ -275,7 +269,7 @@ class App extends Component {
                         state.buffer !== ""
                     ) {
                         // Time for action
-                        this.prevState = state;
+                        this.prevStates.push(state);
                         try {
                             var res = self.calculate(
                                 state.buffer + state.input
@@ -296,16 +290,19 @@ class App extends Component {
                     state.status === self.calculatorStatus.ERROR
                 ) {
                     if (btn.display === "+" || btn.display === "-")
-                        return {
-                            input: btn.display,
-                            status: self.calculatorStatus.NUMERIC,
-                        };
+                        this.prevStates.push(state);
+
+                    return {
+                        input: btn.display,
+                        status: self.calculatorStatus.NUMERIC,
+                    };
                 }
 
                 if (state.status === self.calculatorStatus.NUMERIC) {
+                    this.prevStates.push(state);
                     return {
                         input: btn.display,
-                        buffer: state.buffer + state.input,
+                        buffer: state.input,
                         status: self.calculatorStatus.OPERATOR,
                     };
                 }
@@ -315,11 +312,12 @@ class App extends Component {
                         btn.display === self.CALCULATOR_OPERATORS.PLUS ||
                         btn.display === self.CALCULATOR_OPERATORS.MINUS
                     )
-                        return {
-                            input: btn.display,
-                            buffer: state.buffer + state.input,
-                            status: state.NUMERIC,
-                        };
+                        this.prevStates.push(state);
+                    return {
+                        input: btn.display,
+                        buffer: state.buffer + state.input,
+                        status: state.NUMERIC,
+                    };
                     if (btn.display !== self.CALCULATOR_OPERATORS.EQUALS) {
                         return {
                             input: btn.display,
